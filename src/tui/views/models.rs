@@ -39,15 +39,15 @@ pub fn render(
     frame.render_widget(header, chunks[0]);
 
     // Search bar
-    let search_label = if is_searching {
-        "Search: "
-    } else {
-        "Press / to search HuggingFace  "
-    };
     let search_display = if is_searching {
-        format!("{}{}_", search_label, search_query)
+        format!("Search: {}_", search_query)
+    } else if !search_query.is_empty() {
+        format!(
+            "Search results for: \"{}\"  (Press / to search again, Esc to clear)",
+            search_query
+        )
     } else {
-        search_label.to_string()
+        "Press / to search HuggingFace  ".to_string()
     };
     let search = Paragraph::new(Line::from(Span::styled(
         format!("  {}", search_display),
@@ -79,9 +79,15 @@ pub fn render(
         })
         .collect();
 
+    let title = if search_query.is_empty() {
+        " Recommended Models "
+    } else {
+        " Search Results "
+    };
+
     let list = List::new(items).block(
         Block::default()
-            .title(" Recommended Models ")
+            .title(title)
             .title_style(theme::title())
             .borders(Borders::ALL)
             .border_style(Style::default().fg(theme::DIM)),

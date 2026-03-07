@@ -260,7 +260,11 @@ impl App {
                             if !search_models.is_empty() {
                                 self.models = search_models;
                                 self.model_idx = 0;
+                            } else {
+                                self.search_query.clear();
                             }
+                        } else {
+                            self.search_query.clear();
                         }
                     }
                 }
@@ -296,7 +300,16 @@ impl App {
                 self.start_build();
             }
             InputAction::Back => {
-                self.screen = Screen::Backend;
+                if !self.search_query.is_empty() {
+                    self.search_query.clear();
+                    if let Some(hw) = &self.hw {
+                        self.models =
+                            models::registry::recommend(hw.total_vram_mb(), hw.total_memory_mb());
+                    }
+                    self.model_idx = 0;
+                } else {
+                    self.screen = Screen::Backend;
+                }
             }
             _ => {}
         }
