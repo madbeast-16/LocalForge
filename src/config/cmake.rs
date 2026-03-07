@@ -9,7 +9,10 @@ pub fn generate_cmake_flags(backend: BackendName, cuda_arch: Option<&str>) -> Ve
             flags.push("-DGGML_CUDA=ON".into());
             flags.push("-DGGML_CUDA_F16=ON".into());
             if let Some(arch) = cuda_arch {
-                flags.push(format!("-DCMAKE_CUDA_ARCHITECTURES={arch}"));
+                // CMake requires an integer (e.g. "89", "120"), not a dotted
+                // version like "8.9" or "12.0".  Strip any dots defensively.
+                let arch_clean = arch.replace('.', "");
+                flags.push(format!("-DCMAKE_CUDA_ARCHITECTURES={arch_clean}"));
             }
         }
         BackendName::Hip => {

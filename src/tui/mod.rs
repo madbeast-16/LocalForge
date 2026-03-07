@@ -69,16 +69,19 @@ pub enum InputAction {
 }
 
 /// Poll for a key event with a given timeout. Returns `InputAction`.
-pub fn poll_input(timeout: Duration) -> InputAction {
+///
+/// When `text_input` is true, printable characters are passed through
+/// as `Char(c)` instead of being mapped to vim-style navigation or quit.
+pub fn poll_input(timeout: Duration, text_input: bool) -> InputAction {
     if event::poll(timeout).unwrap_or(false) {
         if let Ok(Event::Key(key)) = event::read() {
-            return map_key(key);
+            return map_key(key, text_input);
         }
     }
     InputAction::None
 }
 
-fn map_key(key: KeyEvent) -> InputAction {
+fn map_key(key: KeyEvent, text_input: bool) -> InputAction {
     // Ctrl+C / Ctrl+Q always quit
     if key.modifiers.contains(KeyModifiers::CONTROL) {
         return match key.code {
@@ -86,6 +89,18 @@ fn map_key(key: KeyEvent) -> InputAction {
             _ => InputAction::None,
         };
     }
+
+    // In text input mode, only handle special keys; let all chars through.
+    if text_input {
+        return match key.code {
+            KeyCode::Enter => InputAction::Select,
+            KeyCode::Esc => InputAction::Back,
+            KeyCode::Backspace => InputAction::Back,
+            KeyCode::Char(c) => InputAction::Char(c),
+            _ => InputAction::None,
+        };
+    }
+
     match key.code {
         KeyCode::Char('q') => InputAction::Quit,
         KeyCode::Up | KeyCode::Char('k') => InputAction::Up,

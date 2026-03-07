@@ -70,7 +70,7 @@ impl App {
 
         while !self.should_quit {
             terminal.draw(|frame| self.render(frame))?;
-            let action = tui::poll_input(Duration::from_millis(50));
+            let action = tui::poll_input(Duration::from_millis(50), self.is_searching);
             self.handle_input(action);
         }
 
