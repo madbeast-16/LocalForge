@@ -1,27 +1,27 @@
 class LlamaInstall < Formula
   desc "Zero-overhead TUI tool to install and configure llama.cpp with optimal hardware-aware settings"
-  homepage "https://github.com/AlexsJones/llama-install"
+  homepage "https://github.com/madbeast-16/llama-install"
   license "MIT"
   version "0.2.0"
 
   on_macos do
     on_arm do
-      url "https://github.com/AlexsJones/llama-install/releases/download/v#{version}/llama-install-aarch64-apple-darwin.tar.gz"
+      url "https://github.com/madbeast-16/llama-install/releases/download/v#{version}/llama-install-aarch64-apple-darwin.tar.gz"
       sha256 "PLACEHOLDER_SHA256_ARM64_MACOS"
     end
     on_intel do
-      url "https://github.com/AlexsJones/llama-install/releases/download/v#{version}/llama-install-x86_64-apple-darwin.tar.gz"
+      url "https://github.com/madbeast-16/llama-install/releases/download/v#{version}/llama-install-x86_64-apple-darwin.tar.gz"
       sha256 "PLACEHOLDER_SHA256_X86_64_MACOS"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/AlexsJones/llama-install/releases/download/v#{version}/llama-install-aarch64-unknown-linux-gnu.tar.gz"
+      url "https://github.com/madbeast-16/llama-install/releases/download/v#{version}/llama-install-aarch64-unknown-linux-gnu.tar.gz"
       sha256 "PLACEHOLDER_SHA256_ARM64_LINUX"
     end
     on_intel do
-      url "https://github.com/AlexsJones/llama-install/releases/download/v#{version}/llama-install-x86_64-unknown-linux-gnu.tar.gz"
+      url "https://github.com/madbeast-16/llama-install/releases/download/v#{version}/llama-install-x86_64-unknown-linux-gnu.tar.gz"
       sha256 "PLACEHOLDER_SHA256_X86_64_LINUX"
     end
   end
