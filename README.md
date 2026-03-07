@@ -232,6 +232,4 @@ use llama_install::{AppConfig, HardwareInfo, ModelEntry, BackendName};
 ```
 
 ## License
-
 MIT
-# llama-install
