@@ -204,10 +204,9 @@ impl App {
             InputAction::Select => {
                 if self.backend_idx < self.backends.len() {
                     let name = self.backends[self.backend_idx];
-                    let cuda_arch = self
-                        .hw
-                        .as_ref()
-                        .and_then(|hw| hw.gpu.compute_capability.clone());
+                    let cuda_arch = self.hw.as_ref().and_then(|hw| {
+                        crate::config::backends::map_compute_capability(&hw.gpu.compute_capability)
+                    });
                     let backend = make_backend(name, cuda_arch);
                     self.selected_backend = Some(backend);
 

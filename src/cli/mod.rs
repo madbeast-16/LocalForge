@@ -25,7 +25,8 @@ pub fn run_headless(
     println!("\n=== Backend Selection ===");
     let backend = if let Some(name) = config.backend {
         println!("Using config backend: {}", name);
-        crate::config::backends::make_backend(name, hw.gpu.compute_capability.clone())
+        let arch = crate::config::backends::map_compute_capability(&hw.gpu.compute_capability);
+        crate::config::backends::make_backend(name, arch)
     } else {
         select_backend(&hw, force_cpu, force_cuda, force_metal, force_vulkan)?
     };

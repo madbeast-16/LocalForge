@@ -76,17 +76,6 @@ pub fn available_backends(hw: &HardwareInfo) -> Vec<BackendName> {
     backends
 }
 
-fn map_compute_capability(cc: &Option<String>) -> Option<String> {
-    cc.as_ref().map(|v| {
-        let major = v.split('.').next().unwrap_or("7");
-        match major {
-            "12" => "120".into(),
-            "11" => "110".into(),
-            "10" => "100".into(),
-            "9" => "90".into(),
-            "8" => "80".into(),
-            "7" => "75".into(),
-            _ => "75".into(),
-        }
-    })
+pub fn map_compute_capability(cc: &Option<String>) -> Option<String> {
+    cc.as_ref().map(|v| v.replace(".", ""))
 }
