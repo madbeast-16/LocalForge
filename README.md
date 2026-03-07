@@ -14,6 +14,45 @@ Zero-overhead TUI tool to install and configure llama.cpp with optimal hardware-
 - **Config File** — Persistent `config.toml` at `~/.config/llama-install/`
 - **Pluggable Backends** — CUDA, HIP (ROCm), Metal, Vulkan, OpenBLAS, CPU-only
 
+## Prerequisites
+
+Before using `llama-install` to download and build `llama.cpp`, you must have **Git**, **CMake**, and a **C/C++ Compiler** installed on your system.
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install git cmake build-essential
+```
+
+**Linux (Fedora):**
+```bash
+sudo dnf install git cmake gcc gcc-c++ make
+```
+
+**macOS:**
+```bash
+# Installs git and C/C++ compiler
+xcode-select --install
+# Installs cmake
+brew install cmake
+```
+
+**Windows:**
+```powershell
+winget install Git.Git Kitware.CMake
+# You also need the Visual Studio Build Tools (C++ workload) installed.
+```
+
+### Backend-specific Prerequisites
+
+Depending on your hardware, `llama-install` may require additional SDKs to enable GPU acceleration:
+- **CUDA (NVIDIA):** Requires the [NVIDIA CUDA Toolkit](https://developer.nvidia.com/cuda-downloads).
+- **HIP (AMD):** Requires [AMD ROCm](https://rocm.docs.amd.com/) and `clang`.
+- **Vulkan:** Requires the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home).
+- **OpenBLAS:** Requires `libopenblas-dev` (Ubuntu/Debian), `openblas-devel` (Fedora), or `openblas` (macOS).
+
+---
+
 ## Installation
 
 ### One-line install (curl)
