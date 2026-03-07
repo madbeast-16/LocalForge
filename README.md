@@ -19,7 +19,7 @@ Zero-overhead TUI tool to install and configure llama.cpp with optimal hardware-
 ### One-line install (curl)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/madbeast-16/llama-install/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/madbeast-16/llama-install/llama-install-v1/install.sh | bash
 ```
 
 The script auto-detects your OS/architecture, downloads the correct binary, and falls back to building from source if no pre-built binary is available.
@@ -27,7 +27,7 @@ The script auto-detects your OS/architecture, downloads the correct binary, and 
 You can control the install location and version:
 
 ```bash
-INSTALL_DIR=/usr/local/bin VERSION=v0.2.0 curl -fsSL https://raw.githubusercontent.com/madbeast-16/llama-install/main/install.sh | bash
+INSTALL_DIR=/usr/local/bin VERSION=v0.2.0 curl -fsSL https://raw.githubusercontent.com/madbeast-16/llama-install/llama-install-v1/install.sh | bash
 ```
 
 ### Cargo (from crates.io)
