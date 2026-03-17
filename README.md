@@ -8,7 +8,8 @@ Local-first TUI tool that takes you from **zero to a fully working local LLM sta
 
 LocalForge is a terminal-based application that guides you through:
 
-1. **Setup Flow** (Wizard): Hardware detection → Backend selection → llama.cpp build → Model download 2. **Main Workspace**: Chat interface with streaming + Settings for server exposure
+1. **Setup Flow** (Wizard): Hardware detection → Backend selection → llama.cpp build → Model download
+2. **Main Workspace**: Chat interface with streaming + Settings for server exposure
 
 All steps are resumable and expertise-aware (Beginner/Intermediate/Expert).
 
