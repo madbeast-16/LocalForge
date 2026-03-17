@@ -3,7 +3,7 @@
 # llama-install — one-line installer
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/madbeast-16/llama-install/llama-install-v1/install.sh | bash
+# curl -fsSL https://raw.githubusercontent.com/madbeast-16/LocalForge/main/install.sh | bash
 #
 # Options (via env vars):
 #   INSTALL_DIR   — where to place the binary  (default: ~/.local/bin)
@@ -13,8 +13,8 @@
 set -euo pipefail
 
 REPO_OWNER="madbeast-16"
-REPO_NAME="llama-install"
-BINARY_NAME="llama-install"
+REPO_NAME="LocalForge"
+BINARY_NAME="localforge"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 VERSION="${VERSION:-latest}"
 
