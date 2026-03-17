@@ -71,10 +71,38 @@ winget install Git.Git Kitware.CMake
 
 ## Installation
 
+### One-line install (curl)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/madbeast-16/LocalForge/main/install.sh | bash
+```
+
+The install script auto-detects your OS/architecture, downloads the v0.1.5 binary from GitHub Releases, and falls back to building from source if needed.
+
+You can control the installation:
+```bash
+# Install to a specific directory
+INSTALL_DIR=/usr/local/bin curl -fsSL https://raw.githubusercontent.com/madbeast-16/LocalForge/main/install.sh | bash
+
+# Install specific version
+VERSION=v0.1.5 curl -fsSL https://raw.githubusercontent.com/madbeast-16/LocalForge/main/install.sh | bash
+```
+
+### Download binary manually
+
+Pre-built binaries are available at: https://github.com/madbeast-16/LocalForge/releases/tag/v0.1.5
+
+Supported platforms:
+- `x86_64-unknown-linux-gnu` (Linux x86_64)
+- `aarch64-unknown-linux-gnu` (Linux ARM64)
+- `x86_64-apple-darwin` (macOS Intel)
+- `aarch64-apple-darwin` (macOS Apple Silicon)
+- `x86_64-pc-windows-msvc` (Windows)
+
 ### Build from Source
 ```bash
-git clone https://github.com/localforge/localforge
-cd localforge
+git clone https://github.com/madbeast-16/LocalForge
+cd LocalForge
 cargo build --release
 ```
 
