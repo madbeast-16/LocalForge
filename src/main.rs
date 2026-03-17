@@ -1,15 +1,14 @@
 use anyhow::Result;
 use clap::{Parser, Subcommand};
-use log::LevelFilter;
 
-use llama_install::app;
-use llama_install::cli;
-use llama_install::config;
+use localforge::app;
+use localforge::cli;
+use localforge::config;
 
 #[derive(Parser)]
-#[command(name = "llama-install")]
-#[command(version = "0.2.0")]
-#[command(about = "Zero-overhead TUI tool to install and configure llama.cpp")]
+#[command(name = "localforge")]
+#[command(version = "0.1.0")]
+#[command(about = "Local-first TUI tool for a fully working local LLM stack")]
 #[command(author, long_about = None)]
 struct Cli {
     #[command(subcommand)]
@@ -67,23 +66,17 @@ enum Commands {
 
     /// Show or generate config file
     Config {
-        /// Write default config to ~/.config/llama-install/config.toml
+        /// Write default config to ~/.config/localforge/config.toml
         #[arg(long)]
         init: bool,
     },
 }
 
 fn main() -> Result<()> {
-    let cli_args = Cli::parse();
+    // Initialize tracing
+    let _guard = localforge::logger::init();
 
-    env_logger::Builder::new()
-        .filter_level(match cli_args.verbose {
-            0 => LevelFilter::Warn,
-            1 => LevelFilter::Info,
-            2 => LevelFilter::Debug,
-            _ => LevelFilter::Trace,
-        })
-        .init();
+    let cli_args = Cli::parse();
 
     // Load config from disk, then override with CLI args
     let mut cfg = config::AppConfig::load();

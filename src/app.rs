@@ -243,28 +243,32 @@ impl App {
                     // Execute search
                     self.is_searching = false;
                     if !self.search_query.is_empty() {
-                        if let Ok(results) = models::huggingface::search_models(&self.search_query)
-                        {
-                            let search_models: Vec<ModelEntry> = results
-                                .into_iter()
-                                .map(|r| ModelEntry {
-                                    name: r.id.clone(),
-                                    repo: r.id,
-                                    quantization: "Q4_K_M".into(),
-                                    size_label: format!("{} downloads", r.downloads),
-                                    min_vram_mb: 0,
-                                    min_ram_mb: 0,
-                                    description: "HuggingFace search result".into(),
-                                })
-                                .collect();
-                            if !search_models.is_empty() {
-                                self.models = search_models;
-                                self.model_idx = 0;
-                            } else {
+                        // Create a tokio runtime to run the async search
+                        let rt = tokio::runtime::Runtime::new().unwrap();
+                        match rt.block_on(models::huggingface::search_models(&self.search_query)) {
+                            Ok(results) => {
+                                let search_models: Vec<ModelEntry> = results
+                                    .into_iter()
+                                    .map(|r| ModelEntry {
+                                        name: r.id.clone(),
+                                        repo: r.id,
+                                        quantization: "Q4_K_M".into(),
+                                        size_label: format!("{} downloads", r.downloads),
+                                        min_vram_mb: 0,
+                                        min_ram_mb: 0,
+                                        description: "HuggingFace search result".into(),
+                                    })
+                                    .collect();
+                                if !search_models.is_empty() {
+                                    self.models = search_models;
+                                    self.model_idx = 0;
+                                } else {
+                                    self.search_query.clear();
+                                }
+                            }
+                            Err(_) => {
                                 self.search_query.clear();
                             }
-                        } else {
-                            self.search_query.clear();
                         }
                     }
                 }

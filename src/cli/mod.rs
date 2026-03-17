@@ -99,7 +99,10 @@ pub fn run_models(show_all: bool) -> Result<()> {
 /// Search HuggingFace in headless mode.
 pub fn run_search(query: &str) -> Result<()> {
     println!("Searching HuggingFace for '{}'...\n", query);
-    let results = models::huggingface::search_models(query)?;
+    let rt = tokio::runtime::Runtime::new().unwrap();
+    let results = rt
+        .block_on(models::huggingface::search_models(query))
+        .map_err(|e| anyhow::anyhow!("Search failed: {}", e))?;
     if results.is_empty() {
         println!("  No results found.");
     } else {

@@ -1,27 +1,50 @@
-# llama-install
+# localforge
 
-Zero-overhead TUI tool to install and configure llama.cpp with optimal hardware-aware settings.
+Local-first TUI tool that takes you from **zero to a fully working local LLM stack**.
 
-**3.3 MB static binary. No runtime bloat. Fast cold start.**
+**Async, cross-platform, zero-overhead. Production-grade Rust.**
+
+## High-level Vision
+
+LocalForge is a terminal-based application that guides you through:
+
+1. **Setup Flow** (Wizard): Hardware detection → Backend selection → llama.cpp build → Model download 2. **Main Workspace**: Chat interface with streaming + Settings for server exposure
+
+All steps are resumable and expertise-aware (Beginner/Intermediate/Expert).
 
 ## Features
 
-- **Hardware Detection** — Auto-detect CPU, GPU (NVIDIA/AMD/Intel/Apple Silicon), VRAM, CUDA, ROCm
-- **Interactive TUI** — Modern terminal interface with vim keybindings, built on ratatui
-- **Model Recommendations** — Curated GGUF model registry matched to your hardware budget
-- **HuggingFace Search** — Search and browse models directly from the TUI
-- **Headless CLI** — Full scripting support with `--headless` flag
-- **Config File** — Persistent `config.toml` at `~/.config/llama-install/`
-- **Pluggable Backends** — CUDA, HIP (ROCm), Metal, Vulkan, OpenBLAS, CPU-only
+### Setup & Installation
+- **Hardware Detection** — Auto-detect CPU, GPU (NVIDIA/AMD/Apple), VRAM, CUDA, ROCm, WSL
+- **Optimal Backend Selection** — Ranked recommendations (CUDA, Metal, ROCm, Vulkan, CPU)
+- **Automated llama.cpp Build** — Async build with tuned CMake flags per backend
+- **Optional llama-swap** — Hot-swap models without restarting server
+- **Curated Model Registry** — Hardware-fitted GGUF recommendations
+- **HuggingFace Search** — Async search with GGUF filtering
+- **Robust Downloads** — Async downloads with resume support
+
+### Main Workspace
+- **Chat Interface** — Streaming token generation, context meter, history
+- **Model Hot-Swap** — Switch models instantly (if llama-swap installed)
+- **HTTPS Server** — OpenAI-compatible API with API key authentication
+- **KV Cache Advisor** — Intelligent slot/VRAM management for 5-10 concurrent users
+- **Expertise-Aware UI** — Dynamic tooltips based on user level
+
+### Technical Foundation
+- **Async Runtime** — Built on Tokio for responsive I/O
+- **Structured Logging** — Tracing with rotating file appenders
+- **Typed Errors** — Thiserror for robust error handling
+- **Retry Logic** — Exponential backoff for all network ops
+- **Minimal Dependencies** — Single binary, no heavy runtimes
 
 ## Prerequisites
 
-Before using `llama-install` to download and build `llama.cpp`, you must have **Git**, **CMake**, and a **C/C++ Compiler** installed on your system.
+Before building llama.cpp, you need **Git**, **CMake**, and a **C/C++ Compiler**:
 
 **Linux (Ubuntu/Debian):**
 ```bash
 sudo apt update
-sudo apt install git cmake build-essential
+sudo apt install git cmake build-essential pkg-config libssl-dev
 ```
 
 **Linux (Fedora):**
@@ -31,205 +54,198 @@ sudo dnf install git cmake gcc gcc-c++ make
 
 **macOS:**
 ```bash
-# Installs git and C/C++ compiler
 xcode-select --install
-# Installs cmake
-brew install cmake
+brew install cmake pkg-config
 ```
 
 **Windows:**
 ```powershell
 winget install Git.Git Kitware.CMake
-# You also need the Visual Studio Build Tools (C++ workload) installed.
+# Install Visual Studio Build Tools (C++ workload)
 ```
 
-### Backend-specific Prerequisites
-
-Depending on your hardware, `llama-install` may require additional SDKs to enable GPU acceleration:
-- **CUDA (NVIDIA):** Requires the [NVIDIA CUDA Toolkit](https://developer.nvidia.com/cuda-downloads).
-- **HIP (AMD):** Requires [AMD ROCm](https://rocm.docs.amd.com/) and `clang`.
-- **Vulkan:** Requires the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home).
-- **OpenBLAS:** Requires `libopenblas-dev` (Ubuntu/Debian), `openblas-devel` (Fedora), or `openblas` (macOS).
-
----
+### Backend-specific SDKs
+- **CUDA (NVIDIA):** [NVIDIA CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)
+- **HIP (AMD):** [AMD ROCm](https://rocm.docs.amd.com/)
+- **Vulkan:** [Vulkan SDK](https://vulkan.lunarg.com/sdk/home)
 
 ## Installation
 
-### One-line install (curl)
-
+### Build from Source
 ```bash
-curl -fsSL https://raw.githubusercontent.com/madbeast-16/llama-install/llama-install-v1/install.sh | bash
+git clone https://github.com/localforge/localforge
+cd localforge
+cargo build --release
 ```
 
-The script auto-detects your OS/architecture, downloads the correct binary, and falls back to building from source if no pre-built binary is available.
+Binary will be at `target/release/localforge` (~3-4 MB).
 
-You can control the install location and version:
-
+### Install via Cargo
 ```bash
-INSTALL_DIR=/usr/local/bin VERSION=v0.2.0 curl -fsSL https://raw.githubusercontent.com/madbeast-16/llama-install/llama-install-v1/install.sh | bash
-```
-
-### Cargo (from crates.io)
-
-```bash
-cargo install llama-install
-```
-
-### Cargo (from source)
-
-```bash
-git clone https://github.com/madbeast-16/llama-install.git
-cd llama-install
 cargo install --path .
 ```
-
-### Homebrew (macOS / Linux)
-
-```bash
-brew tap madbeast-16/llama-install https://github.com/madbeast-16/llama-install
-brew install llama-install
-```
-
-### Manual download
-
-Download pre-built binaries from the [GitHub Releases](https://github.com/madbeast-16/llama-install/releases) page.
-
-Available platforms:
-- `x86_64-unknown-linux-gnu` (Linux x86_64)
-- `aarch64-unknown-linux-gnu` (Linux ARM64)
-- `x86_64-apple-darwin` (macOS Intel)
-- `aarch64-apple-darwin` (macOS Apple Silicon)
-- `x86_64-pc-windows-msvc` (Windows)
 
 ## Usage
 
 ### Launch TUI (default)
-
 ```bash
-llama-install
+localforge
 ```
 
-The TUI guides you through:
-1. Hardware detection
-2. Backend selection (with auto-recommendation)
-3. Model browsing and selection
-4. Building llama.cpp
-5. Summary with quick-start commands
+The TUI guides you through the complete setup flow.
 
-### Headless / scripting mode
-
+### Headless Mode
 ```bash
-llama-install --headless
-llama-install --headless build --cuda
+localforge --headless build --cuda     # Force CUDA build
+localforge --headless build --metal    # Force Metal build
 ```
 
-### Detect hardware
+### Commands
 
+**Detect hardware:**
 ```bash
-llama-install detect
+localforge detect
 ```
 
-```
-  CPU:   Intel(R) Core(TM) Ultra 9 285H (16 cores)
-  GPU:   NVIDIA GeForce RTX 5070 Ti Laptop GPU (NVIDIA)
-  VRAM:  11.9 GB
-  RAM:   31.1 GB (28.6 GB available)
-  OS:    Linux (WSL)
-  CUDA:  12.0
-```
-
-### Build llama.cpp
-
+**Show model recommendations:**
 ```bash
-llama-install build                # auto-detect best backend
-llama-install build --cuda         # force CUDA
-llama-install build --metal        # force Metal (macOS)
-llama-install build --vulkan       # force Vulkan
-llama-install build --cpu-only     # CPU only
+localforge models          # Hardware-fitted
+localforge models --all    # Show all curated
 ```
 
-### Model recommendations
-
+**Search HuggingFace:**
 ```bash
-llama-install models               # hardware-fitted recommendations
-llama-install models --all         # show all curated models
+localforge search "llama 3"
 ```
 
-### Search HuggingFace
-
+**Build llama.cpp:**
 ```bash
-llama-install search "codellama gguf"
+localforge build                    # Auto-detect
+localforge build --cuda            # Force CUDA
+localforge build --vulkan          # Force Vulkan
 ```
 
-### Configuration
-
+**Configuration:**
 ```bash
-llama-install config               # show current config
-llama-install config --init        # write default config.toml
+localforge config show
+localforge config --init           # Write default config
 ```
 
-Config file location: `~/.config/llama-install/config.toml`
+### Config File
+Location: `~/.config/localforge/config.toml`
 
 ```toml
 install_prefix = "~/.local"
-models_dir = "~/.local/share/llama-install/models"
+models_dir = "~/.local/share/localforge/models"
 headless = false
-# backend = "Cuda"        # optional: lock to a specific backend
-# parallel_jobs = 8       # optional: override build parallelism
+# backend = "Cuda"
+# parallel_jobs = 8
 ```
-
-## Options
-
-```
-  -v, --verbose...       Verbosity level (-v, -vv, -vvv)
-  -p, --prefix <PREFIX>  Installation prefix [default: ~/.local]
-      --headless         Run in headless mode (no TUI, for scripting)
-  -h, --help             Print help
-  -V, --version          Print version
-```
-
-## TUI Keybindings
-
-| Key | Action |
-|-----|--------|
-| `Enter` | Select / continue |
-| `Esc` / `Backspace` | Go back |
-| `j` / `k` or `Up` / `Down` | Navigate |
-| `/` | Search HuggingFace (in model view) |
-| `s` | Skip model selection |
-| `q` / `Ctrl+C` | Quit |
-
-## Supported Backends
-
-| Backend | GPU | Flags |
-|---------|-----|-------|
-| CUDA | NVIDIA (CC >= 6.0) | `-DGGML_CUDA=ON -DGGML_CUDA_F16=ON` |
-| HIP | AMD (ROCm) | `-DGGML_HIPBLAS=ON` |
-| Metal | Apple Silicon | `-DGGML_METAL=ON -DGGML_METAL_EMBED_LIBRARY=ON` |
-| Vulkan | Intel / AMD / NVIDIA | `-DGGML_VULKAN=ON` |
-| OpenBLAS | CPU | `-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS` |
-| CPU Only | CPU | `-DGGML_NATIVE=ON` |
 
 ## Architecture
 
+Clean, layered module structure:
+
 ```
 src/
-├── main.rs              # Thin CLI shell (clap)
-├── lib.rs               # Library crate root
-├── app.rs               # TUI state machine (6 screens)
-├── build/               # Build pipeline: clone -> cmake -> compile -> verify
-├── cli/                 # Headless CLI mode
-├── config/              # AppConfig, Backend types, CMake flag generation
-├── hardware/            # CPU, GPU, memory, CUDA, ROCm detection
-├── models/              # Curated registry, HuggingFace API, download manager
-└── tui/                 # Terminal framework, theme, 6 view modules
+├── main.rs          # Entry point, CLI args
+├── lib.rs           # Library root
+├── app.rs           # App state & routing
+├── config/          # Config/state persistence
+├── error.rs         # Typed errors + retry
+├── logger.rs        # Tracing setup
+├── hardware/        # Hardware detection
+├── build/           # llama.cpp pipeline
+├── models/          # Model discovery & download
+├── inference/       # Inference engines
+├── server/          # HTTP API server
+├── compute/         # KV cache calculator
+└── tui/             # Terminal UI
 ```
 
-The binary is a thin shell over a fully reusable library crate:
+### Key Types
 
+**AppState:** Central state with expertise level, persistence
 ```rust
-use llama_install::{AppConfig, HardwareInfo, ModelEntry, BackendName};
+struct AppState {
+    expertise: ExpertiseLevel,      // Beginner/Intermediate/Expert
+    setup_complete: bool,
+    build_complete: bool,
+    downloaded_models: Vec<String>,
+    server_running: bool,
+}
 ```
+
+**RetryPolicy:** Exponential backoff with jitter
+```rust
+pub struct RetryPolicy {
+    pub max_attempts: u32,
+    pub initial_backoff: Duration,
+    pub backoff_multiplier: f64,
+    pub jitter: bool,
+}
+```
+
+**InferenceEngine:** Pluggable inference backend
+```rust
+#[async_trait]
+pub trait InferenceEngine: Send + Sync {
+    async fn load_model(&mut self, model: &ModelEntry) -> Result<()>;
+    async fn generate(&mut self, session: &ChatSession) -> Result<String>;
+}
+```
+
+## Development
+
+### Build
+```bash
+cargo build --release
+```
+
+### Run tests
+```bash
+cargo test
+```
+
+### Generate docs
+```bash
+cargo doc --no-deps --open
+```
+
+## Platform Support
+
+| Platform | Status | Notes |
+|----------|--------|-------|
+| Linux x86_64 | ✅ Full | Primary target |
+| Linux ARM64 | ✅ Full | Tested on AWS Graviton |
+| macOS Intel | ✅ Full | Tested |
+| macOS Apple Silicon | ✅ Full | Native Metal support |
+| Windows x86_64 | ✅ Full | Native + WSL |
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Run `cargo fmt` and `cargo clippy`
+6. Submit a PR
+
+## Goals
+
+**Binary Size:** < 12 MB (release, stripped)
+**Idle RAM:** < 30 MB
+**Zero Dependencies:** Single static binary
 
 ## License
+
 MIT
+
+## Acknowledgments
+
+Built with:
+- [ratatui](https://github.com/ratatui-org/ratatui) for TUI
+- [tokio](https://tokio.rs) for async runtime
+- [tracing](https://github.com/tokio-rs/tracing) for logging
+- [axum](https://github.com/tokio-rs/axum) for HTTP server
+- [llama.cpp](https://github.com/ggerganov/llama.cpp) for inference

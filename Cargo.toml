@@ -1,20 +1,23 @@
 [package]
-name = "llama-install"
-version = "0.2.0"
+name = "localforge"
+version = "0.1.0"
 edition = "2021"
-description = "Zero-overhead TUI tool to install and configure llama.cpp with optimal hardware-aware settings"
-authors = ["llama-install"]
+description = "Local-first TUI tool for a fully working local LLM stack"
+authors = ["localforge"]
 license = "MIT"
-repository = "https://github.com/madbeast-16/llama-install"
-homepage = "https://github.com/madbeast-16/llama-install"
+repository = "https://github.com/localforge/localforge"
+homepage = "https://github.com/localforge/localforge"
 readme = "README.md"
-keywords = ["llama", "llm", "gguf", "tui", "installer"]
-categories = ["command-line-utilities", "development-tools"]
+keywords = ["llm", "ai", "local", "tui", "llama.cpp"]
+categories = ["command-line-utilities"]
 rust-version = "1.70"
 
 [dependencies]
 # CLI
 clap = { version = "4", features = ["derive"] }
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
 
 # TUI
 ratatui = "0.29"
@@ -29,19 +32,36 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 toml = "0.8"
 
-# HTTP (blocking, no async runtime needed)
-ureq = { version = "2", features = ["json"] }
+# HTTP client with async
+reqwest = { version = "0.12", features = ["json", "stream", "rustls-tls"], default-features = false }
+
+# Server
+axum = "0.7"
+rustls = "0.23"
+rcgen = "0.13"
+tower = "0.5"
+
+# Keyring for API keys
+keyring = { version = "3", features = ["apple-native", "windows-native", "linux-native"] }
 
 # Logging
-log = "0.4"
-env_logger = "0.11"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+tracing-appender = "0.2"
 
 # Error handling
+thiserror = "1"
 anyhow = "1"
+
+# Traits
+async-trait = "0.1"
 
 # Utilities
 dirs = "5"
 shellexpand = "3"
+tempfile = "3"
+rand = "0.8"
+futures = { version = "0.3.31", default-features = false }
 
 [target.'cfg(windows)'.dependencies]
 winreg = "0.52"
