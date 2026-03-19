@@ -9,20 +9,24 @@ use ratatui::{
 use crate::tui::theme;
 
 const LOGO: &[&str] = &[
-    r"  ██╗     ██╗      █████╗ ███╗   ███╗ █████╗ ",
-    r"  ██║     ██║     ██╔══██╗████╗ ████║██╔══██╗",
-    r"  ██║     ██║     ███████║██╔████╔██║███████║",
-    r"  ██║     ██║     ██╔══██║██║╚██╔╝██║██╔══██║",
-    r"  ███████╗███████╗██║  ██║██║ ╚═╝ ██║██║  ██║",
-    r"  ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝",
+    r"  _                       _____ _ _       _ ",
+    r" | |     ___  __ _ ___   /  __ (_) |_   | |",
+    r" | |    / _ \/ _` / __|  | /  \| | __|  | |",
+    r" | |___|  __/ (_| \__ \  | |/\| | |_   |_|",
+    r" |______\___|\__,_|___/   \____/|_|\__|  (_) ",
+    r"  _   _       _ _ _  __      __         _ ",
+    r" | \ | | ___   | | | | \ \    / /__  __ _| |",
+    r" |  \| |/ _ \  | | | |  \ \/\/ / | |/ _` | |",
+    r" | |\  | (_) | | | | |   \  /\  /| | (_| | |",
+    r" |_| \_|\___/  |_|_|_|    \/  \/ |_| \__,_|_|",
 ];
 
 pub fn render(frame: &mut Frame, area: Rect) {
     let chunks = Layout::vertical([
         Constraint::Length(2),
-        Constraint::Length(8),
+        Constraint::Length(11),
         Constraint::Length(3),
-        Constraint::Length(2),
+        Constraint::Length(1),
         Constraint::Min(4),
         Constraint::Length(2),
     ])
@@ -30,8 +34,8 @@ pub fn render(frame: &mut Frame, area: Rect) {
 
     // Title bar
     let title = Paragraph::new(Line::from(vec![
-        Span::styled(" llama-install ", theme::title()),
-        Span::styled("v0.2.0", Style::default().fg(theme::DIM)),
+        Span::styled(" localforge ", theme::title()),
+        Span::styled("v0.1.5", Style::default().fg(theme::DIM)),
     ]))
     .alignment(Alignment::Center);
     frame.render_widget(title, chunks[0]);
@@ -46,7 +50,7 @@ pub fn render(frame: &mut Frame, area: Rect) {
 
     // Subtitle
     let subtitle = Paragraph::new(Line::from(vec![Span::styled(
-        "Zero-overhead installer for llama.cpp",
+        "Zero-to-LLM TUI for local stack",
         Style::default()
             .fg(theme::TEXT)
             .add_modifier(Modifier::BOLD),

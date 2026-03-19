@@ -1,12 +1,12 @@
 [package]
 name = "localforge"
-version = "0.2.0"
-edition = "2026"
+version = "0.1.5"
+edition = "2021"
 description = "Local-first TUI tool for a fully working local LLM stack"
 authors = ["localforge"]
 license = "MIT"
-repository = "https://github.com/madbeast-16/localforge"
-homepage = "https://github.com/madbeast-16/localforge"
+repository = "https://github.com/madbeast-16/LocalForge"
+homepage = "https://github.com/madbeast-16/LocalForge"
 readme = "README.md"
 keywords = ["llm", "ai", "local", "tui", "llama.cpp"]
 categories = ["command-line-utilities"]

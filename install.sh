@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# llama-install — one-line installer
+# localforge — one-line installer
 #
 # Usage:
 # curl -fsSL https://raw.githubusercontent.com/madbeast-16/LocalForge/main/install.sh | bash
@@ -60,7 +60,7 @@ detect_platform() {
             ;;
         MINGW*|MSYS*|CYGWIN*)
             PLATFORM="x86_64-pc-windows-msvc"
-            BINARY_NAME="llama-install.exe"
+            BINARY_NAME="localforge.exe"
             ;;
         *)
             err "Unsupported OS: $os"
@@ -222,7 +222,7 @@ build_from_source() {
 main() {
     echo ""
     echo "  ┌──────────────────────────────────────┐"
-    echo "  │       llama-install  installer        │"
+echo " │ localforge installer │"
     echo "  └──────────────────────────────────────┘"
     echo ""
 
@@ -234,9 +234,9 @@ main() {
     echo ""
     ok "Installation complete!"
     echo ""
-    echo "  Run:  llama-install          # launch TUI"
-    echo "        llama-install detect   # show hardware"
-    echo "        llama-install --help   # all commands"
+echo " Run: localforge # launch TUI"
+echo " localforge detect # show hardware"
+echo " localforge --help # all commands"
     echo ""
 }
 

@@ -1,9 +1,9 @@
 pub mod backends;
 pub mod cmake;
-pub mod state;
 pub mod server;
+pub mod state;
 
-pub use state::{ExpertiseLevel, AppState};
+pub use state::{AppState, ExpertiseLevel};
 
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
@@ -77,7 +77,7 @@ impl Default for AppConfig {
     fn default() -> Self {
         let data_dir = dirs::data_dir()
             .unwrap_or_else(|| PathBuf::from("~/.local/share"))
-            .join("llama-install");
+            .join("localforge");
         Self {
             install_prefix: "~/.local".into(),
             models_dir: data_dir.join("models").to_string_lossy().into_owned(),
@@ -89,11 +89,11 @@ impl Default for AppConfig {
 }
 
 impl AppConfig {
-    /// Standard config file path: `~/.config/llama-install/config.toml`
+    /// Standard config file path: `~/.config/localforge/config.toml`
     pub fn default_path() -> PathBuf {
         dirs::config_dir()
             .unwrap_or_else(|| PathBuf::from("~/.config"))
-            .join("llama-install")
+            .join("localforge")
             .join("config.toml")
     }
 

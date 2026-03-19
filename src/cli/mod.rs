@@ -14,7 +14,7 @@ pub fn run_headless(
     force_metal: bool,
     force_vulkan: bool,
 ) -> Result<()> {
-    println!("llama-install v0.2.0  (headless mode)\n");
+    println!("localforge v0.1.5 (headless mode)\n");
 
     // Step 1: Detect hardware
     println!("=== Hardware Detection ===");
