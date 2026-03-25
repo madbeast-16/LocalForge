@@ -1,3 +1,4 @@
+pub mod themes;
 pub mod views;
 
 use crossterm::{

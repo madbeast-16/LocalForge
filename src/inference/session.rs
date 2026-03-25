@@ -1,4 +1,3 @@
-use crate::error::Result;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChatRole {

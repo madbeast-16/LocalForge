@@ -1,6 +1,10 @@
 pub mod backend;
+pub mod chat;
 pub mod hardware;
 pub mod install;
+pub mod llama_swap;
+pub mod logs;
 pub mod models;
+pub mod settings;
 pub mod summary;
 pub mod welcome;

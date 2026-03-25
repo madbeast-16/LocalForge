@@ -1,5 +1,4 @@
 use thiserror::Error;
-use std::fmt;
 use std::time::Duration;
 
 /// Typed error types for the application
@@ -176,7 +175,7 @@ mod tests {
     
     #[test]
     fn test_retry_policy_backoff() {
-        let policy = RetryPolicy::default();
+        let policy = RetryPolicy::default().with_jitter(false);
         
         assert_eq!(policy.backoff_for(0), Duration::ZERO);
         assert!(policy.backoff_for(1) >= Duration::from_secs(1));

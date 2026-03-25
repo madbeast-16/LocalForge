@@ -1,11 +1,11 @@
-use super::kv_cache::{KvCacheConfig, KV_DTYPE};
+use super::kv_cache::{KvCacheConfig, KvDtype};
 
 #[derive(Debug, Clone)]
 pub struct SlotAdvisorInput {
     pub model_size_mb: usize,
     pub total_vram_mb: usize,
     pub context_length: usize,
-    pub kv_dtype: KV_DTYPE,
+    pub kv_dtype: KvDtype,
     pub target_concurrent_users: usize,
 }
 
@@ -13,8 +13,8 @@ pub struct SlotAdvisorInput {
 pub struct SlotRecommendation {
     pub parallel_slots: usize,
     pub ctx_size: usize,
-    pub cache_type_k: KV_DTYPE,
-    pub cache_type_v: KV_DTYPE,
+    pub cache_type_k: KvDtype,
+    pub cache_type_v: KvDtype,
     pub continuous_batching: bool,
     pub estimated_total_vram_mb: usize,
     pub safety_margin: f64,
@@ -37,8 +37,8 @@ impl SlotAdvisor {
             return SlotRecommendation {
                 parallel_slots: 1,
                 ctx_size: 2048,
-                cache_type_k: KV_DTYPE::Q8_0,
-                cache_type_v: KV_DTYPE::Q8_0,
+                cache_type_k: KvDtype::Q8_0,
+                cache_type_v: KvDtype::Q8_0,
                 continuous_batching: false,
                 estimated_total_vram_mb: model_required,
                 safety_margin: 0.0,

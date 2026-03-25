@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::net::SocketAddr;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerConfig {

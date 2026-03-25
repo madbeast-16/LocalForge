@@ -9,10 +9,18 @@ use ratatui::{
 use crate::hardware::HardwareInfo;
 use crate::tui::theme;
 
-pub fn render(frame: &mut Frame, area: Rect, hw: &HardwareInfo) {
+pub fn render(
+    frame: &mut Frame,
+    area: Rect,
+    hw: &HardwareInfo,
+    vram_override: Option<u64>,
+    editing_vram: bool,
+    vram_input: &str,
+) {
     let chunks = Layout::vertical([
         Constraint::Length(3),
         Constraint::Min(10),
+        Constraint::Length(4),
         Constraint::Length(2),
     ])
     .split(area);
@@ -30,9 +38,12 @@ pub fn render(frame: &mut Frame, area: Rect, hw: &HardwareInfo) {
     frame.render_widget(header, chunks[0]);
 
     // Hardware details
-    let vram_str = HardwareInfo::format_memory(hw.gpu.vram_mb);
+    let effective_vram = vram_override.unwrap_or(hw.gpu.vram_mb);
+    let vram_str = HardwareInfo::format_memory(effective_vram);
     let ram_str = HardwareInfo::format_memory(hw.memory.total_mb);
     let avail_str = HardwareInfo::format_memory(hw.memory.available_mb);
+
+    let overridden = if vram_override.is_some() { " (overridden)" } else { "" };
 
     let detail_lines = vec![
         format!("  CPU          {}", hw.cpu.name),
@@ -44,7 +55,7 @@ pub fn render(frame: &mut Frame, area: Rect, hw: &HardwareInfo) {
         String::new(),
         format!("  GPU          {}", hw.gpu.name),
         format!("  Vendor       {}", hw.gpu.vendor.as_str()),
-        format!("  VRAM         {}", vram_str),
+        format!("  VRAM         {}{}", vram_str, overridden),
         String::new(),
         format!("  RAM          {} ({} available)", ram_str, avail_str),
         format!("  OS           {}", hw.os),
@@ -86,6 +97,62 @@ pub fn render(frame: &mut Frame, area: Rect, hw: &HardwareInfo) {
     );
     frame.render_widget(details, chunks[1]);
 
+    // VRAM override section
+    let vram_section = if editing_vram {
+        vec![
+            Line::from(vec![
+                Span::styled("  VRAM Override (MB): ", Style::default().fg(theme::ACCENT)),
+                Span::styled(
+                    format!("{}_", vram_input),
+                    Style::default()
+                        .fg(theme::TEXT)
+                        .add_modifier(Modifier::BOLD),
+                ),
+            ]),
+            Line::from(Span::styled(
+                "  Enter to confirm, Esc to cancel",
+                theme::dim(),
+            )),
+        ]
+    } else {
+        vec![
+            Line::from(vec![
+                Span::styled("  Press ", theme::dim()),
+                Span::styled(
+                    "v",
+                    Style::default()
+                        .fg(theme::ACCENT)
+                        .add_modifier(Modifier::BOLD),
+                ),
+                Span::styled(" to override VRAM  |  ", theme::dim()),
+                Span::styled(
+                    "r",
+                    Style::default()
+                        .fg(theme::ACCENT)
+                        .add_modifier(Modifier::BOLD),
+                ),
+                Span::styled(" to reset to detected value", theme::dim()),
+            ]),
+        ]
+    };
+
+    let vram_widget = Paragraph::new(vram_section).block(
+        Block::default()
+            .title(if vram_override.is_some() {
+                " VRAM Override (active) "
+            } else {
+                " VRAM Override "
+            })
+            .title_style(if vram_override.is_some() {
+                theme::success()
+            } else {
+                theme::title()
+            })
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme::DIM)),
+    );
+    frame.render_widget(vram_widget, chunks[2]);
+
     // Footer
     let footer = Paragraph::new(Line::from(vec![
         Span::styled(
@@ -104,5 +171,5 @@ pub fn render(frame: &mut Frame, area: Rect, hw: &HardwareInfo) {
         Span::styled("back", theme::dim()),
     ]))
     .alignment(Alignment::Center);
-    frame.render_widget(footer, chunks[2]);
+    frame.render_widget(footer, chunks[3]);
 }

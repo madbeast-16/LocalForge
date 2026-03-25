@@ -4,19 +4,19 @@ pub struct KvCacheConfig {
     pub heads: usize,
     pub head_dim: usize,
     pub context_length: usize,
-    pub dtype: KV_DTYPE,
+    pub dtype: KvDtype,
     pub batch_size: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum KV_DTYPE {
+pub enum KvDtype {
     F32,
     F16,
     Q8_0,
     Q4_0,
 }
 
-impl KV_DTYPE {
+impl KvDtype {
     pub fn bytes_per_element(&self) -> usize {
         match self {
             Self::F32 => 4,
